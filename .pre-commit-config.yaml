@@ -1,0 +1,14 @@
+repos:
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.76.0 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
+  hooks:
+    - id: terraform_fmt
+    - id: terraform_docs
+    - id: terraform_tflint
+      args:
+        - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+- repo: https://github.com/awslabs/cfn-python-lint
+  rev: v0.72.2 # The version of cfn-lint to use
+  hooks:
+  - id: cfn-python-lint
+    files: cloudformation/.*\.(json|yml|yaml)$
