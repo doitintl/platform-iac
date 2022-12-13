@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  This template deploys the IAM Policies and Roles
+  needed for AWS Ops. It takes a parameter to define
+  if we need the payer roles as well.
+Parameters:
+  AccountNumberParameter:
+    Type: String
+    Description: Account number AWS Ops runs in
+  ServiceToken:
+    Type: String
+    Description: Service Token to notify on execution
+Resources:
+  AssumeableRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: DoiT_Management_Role_DO-NOT-DELETE
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Ref AccountNumberParameter
+            Action:
+              - "sts:AssumeRole"
+  CustomerPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DoiT_Customer_Policy_DO-NOT-DELETE
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          # We allow List on all resources, this allows
+          # us to know what we need to update/do
+          - Effect: Allow
+            Action:
+              - "iam:ListAttachedRolePolicies"
+              - "iam:ListEntitiesForPolicy"
+              - "iam:ListOpenIDConnectProviders"
+              - "iam:ListPolicies"
+              - "iam:ListPoliciesGrantingServiceAccess"
+              - "iam:ListPolicyVersions"
+              - "iam:ListRolePolicies"
+              - "iam:ListRoles"
+            Resource:
+              - "*"
+          # We only allow updating on our own resources
+          # which limits our ability to delete anything.
+          - Effect: Allow
+            Action:
+              - "iam:AttachRolePolicy"
+              - "iam:CreateOpenIDConnectProvider"
+              - "iam:CreatePolicy"
+              - "iam:CreatePolicyVersion"
+              - "iam:CreateRole"
+              - "iam:CreateSAMLProvider"
+              - "iam:DeleteOpenIDConnectProvider"
+              - "iam:DeletePolicy"
+              - "iam:DeletePolicyVersion"
+              - "iam:DeleteRole"
+              - "iam:DetachRolePolicy"
+              - "iam:GetOpenIDConnectProvider"
+              - "iam:GetPolicy"
+              - "iam:GetPolicyVersion"
+              - "iam:GetRole"
+              - "iam:PutRolePolicy"
+              - "iam:SetDefaultPolicyVersion"
+              - "iam:UpdateOpenIDConnectProviderThumbprint"
+              - "iam:UpdateRole"
+              - "iam:UpdateRoleDescription"
+            Resource:
+              - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/oidc.aws-ops.doit-intl.com*"
+              - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/DoiT-*"
+              - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/DoiT-Support*"
+      Roles:
+        - !Ref AssumeableRole
+  Hook:
+    Type: Custom::Hook
+    Version: "1.0"
+    Properties:
+      ServiceToken: !Ref ServiceToken
+      RoleArn: !GetAtt AssumeableRole.Arn
+      AccountId: !Ref "AWS::AccountId"
+    DependsOn:
+      - CustomerPolicy
+Outputs:
+  RoleName:
+    Value: !Ref AssumeableRole
+  RoleArn:
+    Value: !GetAtt AssumeableRole.Arn
