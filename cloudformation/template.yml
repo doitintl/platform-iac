@@ -11,7 +11,7 @@ Parameters:
     Type: String
     Description: Service Token to notify on execution
 Resources:
-  AssumeableRole:
+  AssumableRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: DoiT_Management_Role_DO-NOT-DELETE
