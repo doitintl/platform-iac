@@ -4,7 +4,7 @@ Description: >
   needed for AWS Ops. It takes a parameter to define
   if we need the payer roles as well.
 Parameters:
-  AccountNumberParameter:
+  AccountNumber:
     Type: String
     Description: Account number AWS Ops runs in
   ServiceToken:
@@ -21,7 +21,7 @@ Resources:
           - Effect: Allow
             Principal:
               AWS:
-                - !Ref AccountNumberParameter
+                - !Ref AccountNumber
             Action:
               - "sts:AssumeRole"
   CustomerPolicy:

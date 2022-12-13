@@ -14,5 +14,5 @@ Deploy CloudFormation stack:
 aws cloudformation deploy \
     --stack-name support-access \
     --template-file template.yml \
-    --parameter-overrides AccountNumberParameter=<YOUR_ACCOUNT_NUMBER> ServiceToken=<YOUR_SERVICE_TOKEN>
+    --parameter-overrides AccountNumber=<YOUR_ACCOUNT_NUMBER> ServiceToken=<YOUR_SERVICE_TOKEN>
 ```
