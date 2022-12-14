@@ -9,5 +9,3 @@ variable "service_token" {
   type = string
   default = ""
 }
-
-
