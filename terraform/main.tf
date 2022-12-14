@@ -1,7 +1,7 @@
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
-data "aws_iam_policy_document" "doit-assume-role-policy" {
+data "aws_iam_policy_document" "doit_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -12,9 +12,9 @@ data "aws_iam_policy_document" "doit-assume-role-policy" {
   }
 }
 
-data "aws_iam_policy_document" "doit-iam-policy-document" {
+data "aws_iam_policy_document" "doit_iam_policy_document" {
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     # We allow List on all resources, this allows
     # us to know what we need to update/do
@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "doit-iam-policy-document" {
     resources = ["*"]
   }
   statement {
-    sid = "doit-update-own-resources"
+    sid    = "doit-update-own-resources"
     effect = "Allow"
     # We only allow updating on our own resources
     # which limits our ability to delete anything.
@@ -65,17 +65,17 @@ data "aws_iam_policy_document" "doit-iam-policy-document" {
   }
 }
 
-resource "aws_iam_policy" "doit-iam-policy" {
+resource "aws_iam_policy" "doit_iam_policy" {
   name   = "DoiT_Customer_Policy_DO-NOT-DELETE"
-  policy = data.aws_iam_policy_document.doit-iam-policy-document.json
+  policy = data.aws_iam_policy_document.doit_iam_policy_document.json
 }
 
-resource "aws_iam_role" "doit-management-role" {
+resource "aws_iam_role" "doit_management_role" {
   name               = "DoiT_Management_Role_DO-NOT-DELETE"
-  assume_role_policy = data.aws_iam_policy_document.doit-assume-role-policy.json
+  assume_role_policy = data.aws_iam_policy_document.doit_assume_role_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "doit-management-role-attachment" {
-  role       = aws_iam_role.doit-management-role.name
-  policy_arn = aws_iam_policy.doit-iam-policy.arn
+  role       = aws_iam_role.doit_management_role.name
+  policy_arn = aws_iam_policy.doit_iam_policy.arn
 }
