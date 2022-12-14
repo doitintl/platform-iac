@@ -75,7 +75,7 @@ resource "aws_iam_role" "doit_management_role" {
   assume_role_policy = data.aws_iam_policy_document.doit_assume_role_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "doit-management-role-attachment" {
+resource "aws_iam_role_policy_attachment" "doit_management_role_attachment" {
   role       = aws_iam_role.doit_management_role.name
   policy_arn = aws_iam_policy.doit_iam_policy.arn
 }
